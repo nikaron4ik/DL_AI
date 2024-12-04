@@ -18,6 +18,7 @@ class MyConsumer(AsyncWebsocketConsumer):
         self.client_id = self.scope['url_route']['kwargs']['client_id']
         if self.client_id not in hist:
             hist[self.client_id] = []
+        self.old_language = None        
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -27,12 +28,23 @@ class MyConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = data['message']
-        hist[self.client_id].append({"role": "user", "content": message})
-        language = data['language']
-        value = data["value"]
-        formatted_message = f"You: {message}"
+        
 
+        message = data['message']              #сообщение      
+        language = data['language']            #выбранный язык
+        value = data["value"]                  #выбранная модель
+        #смена языка
+        if self.old_language!= language:
+            if language == "Русский":
+                message+= ". Разговаривай со мной только по-русски"
+            if language == "Français": 
+                message+= ". Communiquez avec moi uniquement en français"  #Общайся со мной только на французском языке
+            if language == "English":
+                message += ". Communicate with me only in English"   #Общайся со мной только на английском языке
+            self.old_language = language
+
+        await self.send(text_data=f"You: {message}")   #отправка сообщения пользователя
+        
         if value == "Meta_Llama_3_1_70B_Instruct":
             response = await ask_Meta_Llama_3_1_70B_Instruct_async(message, self.client_id)
         elif value == "Mixtral_8x7B":
@@ -42,19 +54,17 @@ class MyConsumer(AsyncWebsocketConsumer):
         elif value == "Gemma_7b":
             response = await ask_Gemma_7b_async(message, self.client_id)
 
+
+        await self.send(text_data= f"Assistant: {response}")  #отправка ответа от ИИ
+
+
+
+
+
+
 #       На случай возвращения старых моделей или добавлени я новых:
 #       elif value == "chatgpt":
 #       elif value == "Mistral_7B_Instruct":
 #       elif value == "Mistral_Nemo_Instruct":
 #       elif value == "Mixtral_8x22b":
-
-        answer = f"Assistant: {response}"
-        print(answer)
-        print(f"Received message from client {self.client_id}: {message}")
-        print(language)
-        print(value)
-        print(hist[self.client_id])
-
         # Отправляем сообщения отдельно как сырой текст
-        await self.send(text_data=formatted_message)
-        await self.send(text_data=answer)
