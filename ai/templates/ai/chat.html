@@ -127,7 +127,7 @@
             <textarea type="text" id="messageText" placeholder="Задайте вопрос (желательно на английском во избежание ошибок)" autocomplete="off"></textarea>
             <div>
             <button>Send</button>
-            <button>Clear Context</button>
+            <button type="button" onclick="clearContext()">Clear Context</button>
             <select id="selectLang">
                 <option language="Russian">Русский</option>
                 <option language="English">English</option>
@@ -181,7 +181,7 @@
         input.value = ''
         notEnter=false
     };
-    
+
     function sendMessage(event) {
     event.preventDefault();  // Эта строка вызывает ошибку, если event не передан
     if (ws.readyState === WebSocket.OPEN) {
@@ -194,6 +194,17 @@
         console.log("WebSocket is not open: " + ws.readyState);
     }
 }
+
+
+// Функция очистки контекста (истории переписки) ИИ
+    function clearContext() {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({action: 'clear_context'}));
+        } else {
+            console.log("WebSocket is not open: " + ws.readyState);
+        }
+}
+
 
 
     let isResizing = false;

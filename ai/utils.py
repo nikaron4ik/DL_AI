@@ -11,6 +11,7 @@ from requests.auth import HTTPBasicAuth
 from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 
+
 load_dotenv()
 CLIENT_ID = os.getenv("CLIENT_ID")
 SECRET = os.getenv("SBER_SECRET")
@@ -21,7 +22,6 @@ GROQ_TOKEN = os.getenv("GROQ_TOKEN")
 
 
 hist=dict([])
-
 
 async def ask_Meta_Llama_3_1_70B_Instruct_async(messages: str, user_id: int) -> str:
     if user_id not in hist:
