@@ -32,6 +32,7 @@ class MyConsumer(AsyncWebsocketConsumer):
         #Обработка нажатия кнопки Clear Context
         if data.get('action') == 'clear_context':
             hist[self.client_id] = []
+            self.old_language = None
             await self.send(text_data="Context Cleared!")
             return
 
