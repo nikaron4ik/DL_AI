@@ -37,6 +37,7 @@ ALLOWED_HOSTS = [
     "http://dl.gsu.by",
     "https://dl.gsu.by",
     "127.0.0.1",
+    "localhost",
     ]
 
 
