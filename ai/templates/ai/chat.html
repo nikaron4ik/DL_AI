@@ -240,6 +240,45 @@
         }
     });
 
+    function updateLanguageText(lang) {
+        if (lang === "Русский") {
+            document.querySelector("textarea").setAttribute("placeholder", "Задайте вопрос (желательно на английском во избежание ошибок)");
+            
+            document.querySelector("button").innerText = "Отправить";
+            document.querySelector("button[type='button']").innerText = "Очистить контекст";
+            
+            document.querySelector(".check").innerHTML = `
+                <input type="checkbox" class="inp" checked> 
+                При нажатии на Enter будет отправляться вопрос (для переноса строки Enter+Shift)
+            `;
+        } else if (lang === "English") {
+            document.querySelector("textarea").setAttribute("placeholder", "Ask a question (preferably in English to avoid mistakes)");
+            document.querySelector("button").innerText = "Send";
+            document.querySelector("button[type='button']").innerText = "Clear Context";
+            document.querySelector(".check").innerHTML = `
+                <input type="checkbox" class="inp" checked> 
+                Press Enter to send a question (use Enter+Shift for a new line)
+            `;
+        } else if (lang === "Français") { 
 
+            document.querySelector("textarea").setAttribute("placeholder", "Posez une question (de préférence en anglais pour éviter les erreurs)");
+            document.querySelector("button").innerText = "Envoyer";
+            document.querySelector("button[type='button']").innerText = "Effacer le contexte";
+            document.querySelector(".check").innerHTML = `
+                <input type="checkbox" class="inp" checked> 
+                Appuyez sur Entrée pour envoyer une question (utilisez Entrée+Shift pour une nouvelle ligne)
+            `;
+        }
+    }
+
+    document.querySelector("#selectLang").addEventListener("change", function() {
+        const lang = this.value;
+        updateLanguageText(lang);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const lang = document.querySelector("#selectLang").value;
+        updateLanguageText(lang);  
+    });
 </script>
 {% endblock %}
